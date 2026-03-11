@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LEVEL 5 – REDSTONE CRYPTOGRAPHY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="icon" type="image/png" href="11zon_cropped.png" />
+</head>
+<body class="level5">
+  <div class="noise-overlay"></div>
+  <div class="scanlines"></div>
+  <div class="vignette"></div>
+
+  <main class="l5-wrapper">
+    <div class="l5-header">
+      <div class="l5-tag">facility access // node 05</div>
+      <h1>LEVEL 5 — REDSTONE CRYPTOGRAPHY</h1>
+      <p class="l5-sub">Facility Node 5 Access Portal</p>
+    </div>
+
+    <section class="l5-section lore-box">
+      <div class="section-label">briefing</div>
+      <p>
+        Investigators have located Node 5 of the NULL network deep within an
+        abandoned facility. Beneath the structure, a redstone-driven encryption
+        system protects the next fragment of the algorithm. Recover the flag and
+        extract the data.
+      </p>
+    </section>
+
+    <section class="l5-section">
+      <div class="section-label">objective</div>
+      <ul class="l5-list">
+        <li>Decode the redstone encryption.</li>
+        <li>Navigate the underground facility.</li>
+        <li>Avoid triggering containment systems.</li>
+        <li>Retrieve the Level 5 flag.</li>
+      </ul>
+    </section>
+
+    <section class="l5-section info-grid">
+      <div class="info-card">
+        <div class="section-label">server information</div>
+        <div class="info-row">
+          <span class="info-key">Server Address</span>
+          <span class="info-value">yourserver.playit.gg</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Minecraft Version</span>
+          <span class="info-value">1.20.x</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Maximum Players</span>
+          <span class="info-value">10</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Client Type</span>
+          <span class="info-value">Minecraft Java (TLauncher supported)</span>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="section-label">how to join</div>
+        <ol class="l5-list ordered">
+          <li>Open Minecraft Java Edition.</li>
+          <li>Go to Multiplayer.</li>
+          <li>Click Add Server.</li>
+          <li>Enter the server address.</li>
+          <li>Join the challenge.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="l5-section">
+      <div class="section-label">rules</div>
+      <ul class="l5-list">
+        <li>Do not break blocks.</li>
+        <li>Do not place blocks.</li>
+        <li>Do not exploit glitches.</li>
+        <li>No external mods that give unfair advantages.</li>
+        <li>Follow admin instructions.</li>
+        <li>Admins may remove players who disrupt the challenge.</li>
+      </ul>
+    </section>
+
+    <section class="l5-section tip-box">
+      <div class="section-label">field note</div>
+      <p>Observation is often more important than speed.</p>
+    </section>
+
+    <section class="l5-section submission-box">
+      <div class="section-label">flag format</div>
+      <div class="flag-format">NULL{...}</div>
+      <p>Submit the flag to the challenge platform once recovered.</p>
+    </section>
+
+    <section class="l5-section admin-box">
+      <div class="section-label">support</div>
+      <p>
+        If you experience technical issues during the challenge, contact the
+        event administrators.
+      </p>
+    </section>
+
+    <div class="l5-actions">
+      <button id="copy-server" class="l5-btn secondary-btn" type="button">
+        copy server address
+      </button>
+
+      <a href="minecraft://?addExternalServer=Node5|yourserver.playit.gg:25565" class="l5-btn primary-btn">
+        enter node 5
+      </a>
+    </div>
+
+    <div id="copy-feedback" class="copy-feedback" aria-live="polite"></div>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const copyBtn = document.getElementById("copy-server");
+      const feedback = document.getElementById("copy-feedback");
+      const serverAddress = "yourserver.playit.gg";
+
+      copyBtn.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(serverAddress);
+          feedback.textContent = "server address copied.";
+          feedback.className = "copy-feedback ok";
+        } catch (err) {
+          feedback.textContent = "copy failed. server: " + serverAddress;
+          feedback.className = "copy-feedback error";
+        }
+      });
+    });
+  </script>
+</body>
+</html>
