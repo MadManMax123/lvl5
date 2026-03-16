@@ -8,7 +8,7 @@
   <link rel="icon" type="image/png" href="/11zon_cropped.png" />
 
   <style>
-    /* ── INTRO OVERLAY ── */
+    /* ── INTRO ── */
     #cinematic-intro {
       position: fixed;
       inset: 0;
@@ -16,9 +16,6 @@
       background: #000;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 40px;
       overflow: hidden;
     }
 
@@ -27,9 +24,7 @@
       pointer-events: none;
     }
 
-    @keyframes introFadeOut {
-      to { opacity: 0; }
-    }
+    @keyframes introFadeOut { to { opacity: 0; } }
 
     /* scanlines */
     #cinematic-intro::before {
@@ -37,11 +32,8 @@
       position: absolute;
       inset: 0;
       background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0,0,0,.15) 2px,
-        rgba(0,0,0,.15) 4px
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,.13) 2px, rgba(0,0,0,.13) 4px
       );
       pointer-events: none;
       z-index: 1;
@@ -52,49 +44,50 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse at center, transparent 38%, rgba(0,0,0,.7) 100%);
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,.65) 100%);
       pointer-events: none;
       z-index: 1;
     }
 
-    /* ── RED BREACH OVERLAY ── */
+    /* ── BREACH OVERLAY ── */
     #breach-overlay {
       position: absolute;
       inset: 0;
       z-index: 2;
       pointer-events: none;
       opacity: 0;
-      transition: opacity .4s ease;
-      background: radial-gradient(ellipse at center, rgba(255,30,30,.13) 0%, rgba(180,0,0,.07) 60%, transparent 100%);
+      transition: opacity .5s ease;
+      background: radial-gradient(ellipse at center,
+        rgba(255,20,20,.16) 0%,
+        rgba(160,0,0,.08) 55%,
+        transparent 100%);
     }
 
     #breach-overlay.active {
       opacity: 1;
-      animation: breachPulse 1.1s ease-in-out infinite;
+      animation: breachPulse 1.05s ease-in-out infinite;
     }
 
     @keyframes breachPulse {
-      0%, 100% { opacity: .7; }
-      50%       { opacity: 1; }
+      0%,100% { opacity: .65; }
+      50%      { opacity: 1; }
     }
 
-    /* border flash on breach */
     #cinematic-intro.breach-mode {
-      box-shadow: inset 0 0 0 2px rgba(255, 40, 40, .35);
-      animation: borderFlash 1.1s ease-in-out infinite;
+      animation: borderFlash 1.05s ease-in-out infinite;
     }
 
     @keyframes borderFlash {
-      0%, 100% { box-shadow: inset 0 0 0 2px rgba(255,40,40,.2); }
-      50%       { box-shadow: inset 0 0 0 2px rgba(255,60,60,.6), 0 0 40px rgba(255,0,0,.15); }
+      0%,100% { box-shadow: inset 0 0 0 2px rgba(255,40,40,.18); }
+      50%      { box-shadow: inset 0 0 0 2px rgba(255,50,50,.55), 0 0 50px rgba(200,0,0,.18); }
     }
 
     /* ── WARNING TRIANGLE ── */
     #warn-triangle {
       position: absolute;
-      top: 50%;
+      top: 44%;
       left: 50%;
-      transform: translate(-50%, -60%);
+      transform: translate(-50%, -50%);
       z-index: 3;
       opacity: 0;
       pointer-events: none;
@@ -103,113 +96,181 @@
 
     #warn-triangle.visible {
       opacity: 1;
-      animation: trianglePulse 1.1s ease-in-out infinite;
+      animation: triPulse 1.05s ease-in-out infinite;
     }
 
-    @keyframes trianglePulse {
-      0%, 100% { opacity: .55; transform: translate(-50%, -60%) scale(1); }
-      50%       { opacity: 1;   transform: translate(-50%, -60%) scale(1.04); }
+    @keyframes triPulse {
+      0%,100% { opacity: .45; transform: translate(-50%,-50%) scale(1); }
+      50%      { opacity: .9;  transform: translate(-50%,-50%) scale(1.05); }
     }
 
     #warn-triangle svg {
-      width: clamp(60px, 10vw, 100px);
-      height: auto;
-      filter: drop-shadow(0 0 18px rgba(255,60,40,.7));
+      width: clamp(80px, 14vw, 140px);
+      filter: drop-shadow(0 0 22px rgba(255,50,30,.8));
     }
 
-    /* ── TERMINAL ── */
-    #terminal {
+    /* ── TERMINAL PANEL ── */
+    #terminal-panel {
       position: relative;
       z-index: 4;
-      width: min(680px, 90vw);
-      font-family: 'JetBrains Mono', ui-monospace, monospace;
-      font-size: clamp(.72rem, 1.4vw, .88rem);
-      line-height: 1.85;
-      letter-spacing: .04em;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 28px 36px 32px;
+      overflow: hidden;
     }
 
+    #terminal {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      overflow-y: auto;
+      max-height: 100%;
+      scrollbar-width: none;
+    }
+
+    #terminal::-webkit-scrollbar { display: none; }
+
     .t-line {
-      display: block;
-      opacity: 0;
-      transform: translateY(4px);
-      animation: lineIn .22s ease forwards;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: clamp(.72rem, 1.3vw, .86rem);
+      line-height: 1.9;
+      letter-spacing: .03em;
       white-space: pre-wrap;
       word-break: break-word;
+      opacity: 0;
+      animation: lineIn .18s ease forwards;
     }
 
     @keyframes lineIn {
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(3px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
-    .t-normal  { color: rgba(180, 210, 255, .8); }
-    .t-dim     { color: rgba(100, 130, 180, .6); }
-    .t-breach  { color: #ff4444; text-shadow: 0 0 8px rgba(255,60,40,.6); }
-    .t-warn    { color: #ffb347; text-shadow: 0 0 6px rgba(255,160,40,.4); }
-    .t-good    { color: #6df5b8; text-shadow: 0 0 8px rgba(80,255,160,.4); }
-    .t-lore    { color: rgba(200, 220, 255, .78); }
+    .t-normal { color: rgba(175, 205, 255, .78); }
+    .t-dim    { color: rgba(90, 120, 170, .58); }
+    .t-breach { color: #ff4040; text-shadow: 0 0 8px rgba(255,50,30,.55); }
+    .t-warn   { color: #ffb040; text-shadow: 0 0 6px rgba(255,150,30,.35); }
+    .t-good   { color: #5ff5a8; text-shadow: 0 0 8px rgba(60,240,140,.35); }
+    .t-empty  { color: transparent; user-select: none; }
 
     .t-cursor {
       display: inline-block;
-      width: .55em;
-      height: .95em;
-      background: rgba(95, 240, 255, .75);
+      width: .52em;
+      height: .92em;
+      background: rgba(95,240,255,.8);
       margin-left: 2px;
       vertical-align: text-bottom;
       animation: blink .65s step-end infinite;
     }
 
     @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0; }
+      0%,100% { opacity: 1; }
+      50%      { opacity: 0; }
+    }
+
+    /* ── LORE PANEL (hidden initially) ── */
+    #lore-panel {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 40px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .9s ease;
+    }
+
+    #lore-panel.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #lore-display {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: clamp(.78rem, 1.5vw, .95rem);
+      color: rgba(185, 215, 255, .82);
+      text-align: center;
+      max-width: 62ch;
+      line-height: 1.85;
+      letter-spacing: .045em;
+      opacity: 1;
+      transition: opacity .8s ease;
+    }
+
+    #lore-display.fade-line-out {
+      opacity: 0;
+    }
+
+    #lore-display::after {
+      content: '';
+      display: inline-block;
+      width: .5em;
+      height: 1em;
+      background: rgba(95,240,255,.75);
+      margin-left: 3px;
+      vertical-align: text-bottom;
+      animation: blink .65s step-end infinite;
     }
 
     /* ── SKIP ── */
     #skip-btn {
       position: absolute;
-      bottom: 28px;
-      right: 32px;
+      bottom: 26px;
+      right: 30px;
       z-index: 10;
       background: transparent;
-      border: 1px solid rgba(120, 160, 255, .2);
+      border: 1px solid rgba(120,160,255,.2);
       border-radius: 8px;
-      color: rgba(120, 160, 255, .45);
+      color: rgba(120,160,255,.4);
       font-family: 'JetBrains Mono', ui-monospace, monospace;
-      font-size: .66rem;
+      font-size: .64rem;
       letter-spacing: .16em;
       text-transform: uppercase;
-      padding: 7px 14px;
+      padding: 6px 13px;
       cursor: pointer;
       transition: .2s;
     }
 
     #skip-btn:hover {
-      border-color: rgba(95, 240, 255, .5);
-      color: rgba(95, 240, 255, .8);
-      box-shadow: 0 0 10px rgba(95, 240, 255, .12);
+      border-color: rgba(95,240,255,.5);
+      color: rgba(95,240,255,.8);
     }
   </style>
 </head>
 <body class="level5">
 
-  <!-- INTRO -->
+  <!-- ── INTRO ── -->
   <div id="cinematic-intro">
     <div id="breach-overlay"></div>
     <div id="warn-triangle">
-      <svg viewBox="0 0 100 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M50 4L96 84H4L50 4Z" stroke="#ff3322" stroke-width="4" fill="rgba(255,30,20,.08)"/>
-        <text x="50" y="68" text-anchor="middle" font-family="monospace" font-size="38" font-weight="bold" fill="#ff4433">!</text>
+      <svg viewBox="0 0 100 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M50 6L95 84H5L50 6Z" stroke="#ff3322" stroke-width="3.5" fill="rgba(255,20,10,.07)"/>
+        <text x="50" y="70" text-anchor="middle"
+              font-family="monospace" font-size="40"
+              font-weight="bold" fill="#ff4433">!</text>
       </svg>
     </div>
-    <div id="terminal"></div>
+    <div id="terminal-panel">
+      <div id="terminal"></div>
+    </div>
+    <div id="lore-panel">
+      <div id="lore-display"></div>
+    </div>
     <button id="skip-btn">skip ›</button>
   </div>
 
-  <!-- MAIN SITE -->
+  <!-- ── MAIN SITE ── -->
   <div class="noise-overlay"></div>
   <div class="scanlines"></div>
   <div class="vignette"></div>
 
-  <main class="l5-wrapper" id="main-site" style="visibility:hidden;opacity:0;transition:opacity .9s ease;">
+  <main class="l5-wrapper" id="main-site"
+        style="visibility:hidden;opacity:0;transition:opacity .9s ease;">
     <div class="l5-header">
       <div class="l5-tag">facility access // node 05</div>
       <h1>REDSTONE CRYPTOGRAPHY</h1>
@@ -256,7 +317,6 @@
           <span class="info-value">Minecraft Java (TLauncher supported)</span>
         </div>
       </div>
-
       <div class="info-card">
         <div class="section-label">how to join</div>
         <ol class="l5-list ordered">
@@ -304,54 +364,65 @@
       <button id="copy-server" class="l5-btn secondary-btn" type="button">
         copy server address
       </button>
-      <a href="minecraft://?addExternalServer=Node5|yourserver.playit.gg:25565" class="l5-btn primary-btn">
+      <a href="minecraft://?addExternalServer=Node5|yourserver.playit.gg:25565"
+         class="l5-btn primary-btn">
         enter node 5
       </a>
     </div>
-
     <div id="copy-feedback" class="copy-feedback" aria-live="polite"></div>
   </main>
 
   <script>
     // ── COPY BUTTON ──────────────────────────────────────────────
     document.addEventListener("DOMContentLoaded", () => {
-      const copyBtn = document.getElementById("copy-server");
+      const copyBtn  = document.getElementById("copy-server");
       const feedback = document.getElementById("copy-feedback");
-      const serverAddress = "yourserver.playit.gg";
       if (!copyBtn) return;
       copyBtn.addEventListener("click", async () => {
         try {
-          await navigator.clipboard.writeText(serverAddress);
+          await navigator.clipboard.writeText("yourserver.playit.gg");
           feedback.textContent = "server address copied.";
-          feedback.className = "copy-feedback ok";
+          feedback.className   = "copy-feedback ok";
         } catch {
-          feedback.textContent = "copy failed. server: " + serverAddress;
-          feedback.className = "copy-feedback error";
+          feedback.textContent = "copy failed. server: yourserver.playit.gg";
+          feedback.className   = "copy-feedback error";
         }
       });
     });
 
     // ── CINEMATIC INTRO ──────────────────────────────────────────
     (async () => {
-      const introEl     = document.getElementById('cinematic-intro');
-      const termEl      = document.getElementById('terminal');
-      const breachEl    = document.getElementById('breach-overlay');
-      const triangleEl  = document.getElementById('warn-triangle');
-      const skipBtn     = document.getElementById('skip-btn');
-      const mainSite    = document.getElementById('main-site');
-
-      const CHAR_DELAY  = 32;   // ms per char (terminal lines)
-      const HOLD_MS     = 2200; // hold after lore line
-      const FADE_MS     = 800;  // lore line fade out
-      const INTER_MS    = 80;
+      const introEl    = document.getElementById('cinematic-intro');
+      const termEl     = document.getElementById('terminal');
+      const breachEl   = document.getElementById('breach-overlay');
+      const triangleEl = document.getElementById('warn-triangle');
+      const lorePanel  = document.getElementById('lore-panel');
+      const loreDisp   = document.getElementById('lore-display');
+      const skipBtn    = document.getElementById('skip-btn');
+      const mainSite   = document.getElementById('main-site');
 
       let skipTriggered = false;
+      let alarmNode     = null;
+      let alarmGain     = null;
+      let audioCtx      = null;
+
+      // ── helpers ────────────────────────────────────────────────
+
+      function wait(ms) {
+        return new Promise(r => setTimeout(r, ms));
+      }
+
+      // random delay between min–max ms
+      function jitter(min, max) {
+        return wait(min + Math.random() * (max - min));
+      }
 
       function revealSite() {
         skipTriggered = true;
+        stopAlarm();
         introEl.classList.add('fade-out');
         setTimeout(() => {
-          introEl.style.display = 'none';
+          introEl.style.display   = 'none';
           mainSite.style.visibility = 'visible';
           mainSite.style.opacity    = '1';
         }, 1200);
@@ -359,167 +430,210 @@
 
       skipBtn.addEventListener('click', revealSite);
 
-      function wait(ms) {
-        return new Promise(r => setTimeout(r, ms));
-      }
-
-      // append a terminal line instantly (with slide-in animation)
-      function appendLine(text, cls = 't-normal', delayOffset = 0) {
-        const span = document.createElement('span');
-        span.className = `t-line ${cls}`;
-        span.style.animationDelay = delayOffset + 'ms';
-        span.textContent = text;
-        termEl.appendChild(span);
+      // autoscroll terminal to bottom
+      function scrollTerm() {
         termEl.scrollTop = termEl.scrollHeight;
-        return span;
       }
 
-      // type a line character by character into a new span
-      function typeLine(text, cls = 't-normal') {
-        return new Promise(resolve => {
-          const span = document.createElement('span');
-          span.className = `t-line ${cls}`;
-          span.style.opacity = '1';
-          span.style.transform = 'none';
-          span.style.animation = 'none';
-          termEl.appendChild(span);
+      // append a line to terminal with optional animation delay
+      function addLine(text, cls = 't-normal') {
+        const el = document.createElement('div');
+        el.className = `t-line ${cls}`;
+        el.textContent = text;
+        termEl.appendChild(el);
+        scrollTerm();
+        return el;
+      }
 
-          let i = 0;
-          function tick() {
-            if (skipTriggered) { span.textContent = text; resolve(); return; }
-            span.textContent = text.slice(0, i);
-            if (i <= text.length) { i++; setTimeout(tick, CHAR_DELAY); }
-            else resolve();
+      function addEmpty() { addLine(' ', 't-empty'); }
+
+      // ── alarm (Web Audio) ───────────────────────────────────────
+      function startAlarm() {
+        try {
+          audioCtx  = new (window.AudioContext || window.webkitAudioContext)();
+          alarmGain = audioCtx.createGain();
+          alarmGain.gain.value = 0.18;
+          alarmGain.connect(audioCtx.destination);
+
+          function beep() {
+            if (!alarmNode || skipTriggered) return;
+            const osc = audioCtx.createOscillator();
+            const g   = audioCtx.createGain();
+            osc.type = 'square';
+            osc.frequency.value = 880;
+            g.gain.setValueAtTime(0.18, audioCtx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.18);
+            osc.connect(g);
+            g.connect(alarmGain);
+            osc.start(audioCtx.currentTime);
+            osc.stop(audioCtx.currentTime + 0.18);
           }
-          tick();
-        });
+
+          // pulse every ~900ms
+          alarmNode = { active: true };
+          (function pulse() {
+            if (!alarmNode || !alarmNode.active) return;
+            beep();
+            setTimeout(pulse, 900);
+          })();
+        } catch(e) { /* audio not available */ }
       }
 
-      // lore line: type then fade out
-      function loreLine(text) {
-        return new Promise(async resolve => {
-          // clear previous lore lines
-          termEl.querySelectorAll('.t-lore').forEach(el => el.remove());
-
-          const span = document.createElement('span');
-          span.className = 't-line t-lore';
-          span.style.opacity = '1';
-          span.style.transform = 'none';
-          span.style.animation = 'none';
-          span.style.transition = `opacity ${FADE_MS}ms ease`;
-          termEl.appendChild(span);
-
-          // type in
-          let i = 0;
-          await new Promise(r => {
-            function tick() {
-              if (skipTriggered) { span.textContent = text; r(); return; }
-              span.textContent = text.slice(0, i);
-              if (i <= text.length) { i++; setTimeout(tick, CHAR_DELAY); }
-              else r();
-            }
-            tick();
-          });
-
-          if (skipTriggered) { resolve(); return; }
-          await wait(HOLD_MS);
-          if (skipTriggered) { resolve(); return; }
-
-          span.style.opacity = '0';
-          await wait(FADE_MS + INTER_MS);
-          span.remove();
-          resolve();
-        });
+      function stopAlarm() {
+        if (alarmNode) alarmNode.active = false;
+        alarmNode = null;
+        try { if (audioCtx) audioCtx.close(); } catch(e) {}
+        audioCtx = null;
       }
 
-      // ── SEQUENCE ────────────────────────────────────────────────
+      // ── TERMINAL SEQUENCE ────────────────────────────────────────
 
-      // phase 1 – normal boot
-      await wait(300);
+      // phase 1: boot
+      await jitter(200, 400);
       if (skipTriggered) return;
-      await typeLine('> initializing facility access protocol...', 't-dim');
-      await wait(400);
-      await typeLine('> NODE_05 :: handshake established', 't-normal');
-      await wait(300);
-      await typeLine('> loading redstone encryption layer...', 't-dim');
-      await wait(500);
-      await typeLine('> access tunnel: OPEN', 't-normal');
-      await wait(600);
+      addLine('> initializing facility access protocol...', 't-dim');
+      await jitter(280, 520);
+      addLine('> NODE_05 :: handshake request sent', 't-dim');
+      await jitter(180, 380);
+      addLine('> handshake confirmed — latency: 14ms', 't-normal');
+      await jitter(300, 600);
+      addLine('> loading redstone encryption layer...', 't-dim');
+      await jitter(400, 750);
+      addLine('> encryption layer: MOUNTED', 't-normal');
+      await jitter(250, 500);
+      addLine('> access tunnel: OPEN', 't-normal');
+      await jitter(600, 900);
 
-      if (skipTriggered) { revealSite(); return; }
+      if (skipTriggered) return;
 
-      // phase 2 – breach
-      appendLine('');
+      // phase 2: breach
+      addEmpty();
+      addLine('⚠  NULL SECURITY BREACH DETECTED', 't-breach');
       breachEl.classList.add('active');
       introEl.classList.add('breach-mode');
       triangleEl.classList.add('visible');
+      startAlarm();
 
-      await typeLine('⚠  NULL SECURITY BREACH DETECTED', 't-breach');
-      await wait(200);
-      await typeLine('   ORIGIN: UNKNOWN  //  VECTOR: UNCLASSIFIED', 't-breach');
-      await wait(300);
-      await typeLine('> INITIATING DEFENSE PROTOCOLS...', 't-warn');
-      await wait(400);
-      await typeLine('> isolating signal pathway...         [PARTIAL]', 't-warn');
-      await wait(350);
-      await typeLine('> deploying counter-intrusion mesh...  [ACTIVE]', 't-warn');
-      await wait(350);
-      await typeLine('> tracing source node...', 't-warn');
-      await wait(500);
-      await typeLine('  >> SIGNAL ENCRYPTED — ORIGIN MASKED', 't-breach');
-      await wait(300);
-      await typeLine('> UNKNOWN ATTACK SIGNATURE DETECTED', 't-breach');
-      await wait(250);
-      await typeLine('  >> pattern does not match any known threat index', 't-dim');
-      await wait(250);
-      await typeLine('  >> cross-referencing historical breach logs...', 't-dim');
-      await wait(700);
-      await typeLine('  >> partial match found :: archive ref [REDACTED]', 't-warn');
-      await wait(400);
-      await typeLine('> HARDENING PERIMETER...', 't-warn');
-      await wait(350);
-      await typeLine('> nullifying intrusion vectors...       [OK]', 't-warn');
-      await wait(300);
-      await typeLine('> flushing rogue signal buffer...       [OK]', 't-warn');
-      await wait(400);
-      await typeLine('> running integrity check...            [PASS]', 't-warn');
-      await wait(500);
+      await jitter(120, 260);
+      addLine('   INTRUSION VECTOR: UNCLASSIFIED', 't-breach');
+      await jitter(180, 320);
+      addLine('   ORIGIN: MASKED  //  SIGNATURE: UNKNOWN', 't-breach');
+      await jitter(280, 480);
+      addLine('> INITIATING DEFENSE PROTOCOLS...', 't-warn');
+      await jitter(320, 560);
+      addLine('> isolating inbound signal pathway...', 't-warn');
+      await jitter(180, 340);
+      addLine('  [PARTIAL — secondary vector still open]', 't-dim');
+      await jitter(260, 440);
+      addLine('> deploying counter-intrusion mesh...     [OK]', 't-warn');
+      await jitter(200, 380);
+      addLine('> sealing exposed memory registers...     [OK]', 't-warn');
+      await jitter(300, 520);
+      addLine('> attempting source trace...', 't-warn');
+      await jitter(500, 800);
+      addLine('  >> TRACE FAILED — route encrypted end-to-end', 't-breach');
+      await jitter(200, 360);
+      addLine('> cross-referencing historical breach archive...', 't-dim');
+      await jitter(600, 950);
+      addLine('  >> partial signature match — ref: [REDACTED-7]', 't-warn');
+      await jitter(180, 320);
+      addLine('  >> this pattern has appeared before', 't-dim');
+      await jitter(300, 500);
+      addLine('> HARDENING NULL PERIMETER...', 't-warn');
+      await jitter(220, 400);
+      addLine('> flushing rogue buffer segments...       [OK]', 't-warn');
+      await jitter(180, 340);
+      addLine('> invalidating injected auth tokens...    [OK]', 't-warn');
+      await jitter(200, 380);
+      addLine('> running post-breach integrity check...', 't-warn');
+      await jitter(500, 800);
+      addLine('  >> all critical sectors: INTACT', 't-good');
+      await jitter(300, 500);
 
-      if (skipTriggered) { revealSite(); return; }
+      if (skipTriggered) return;
 
-      // phase 3 – resolved
+      // phase 3: resolved
+      stopAlarm();
       breachEl.classList.remove('active');
       introEl.classList.remove('breach-mode');
       triangleEl.classList.remove('visible');
 
-      await wait(300);
-      appendLine('');
-      await typeLine('> INTRUSION CONTAINED', 't-good');
-      await wait(250);
-      await typeLine('> PERIMETER INTEGRITY: RESTORED', 't-good');
-      await wait(250);
-      await typeLine('> threat classification: PERSISTENT EXTERNAL ACTOR', 't-dim');
-      await wait(400);
-      await typeLine('> resuming facility access sequence...', 't-dim');
-      await wait(350);
-      await typeLine('> UNLOCKING NODE_05...', 't-good');
-      await wait(600);
-      appendLine('');
+      await jitter(200, 380);
+      addEmpty();
+      addLine('> INTRUSION SUCCESSFULLY CONTAINED', 't-good');
+      await jitter(200, 360);
+      addLine('> PERIMETER INTEGRITY: RESTORED', 't-good');
+      await jitter(180, 320);
+      addLine('> threat actor: PERSISTENT EXTERNAL ENTITY', 't-dim');
+      await jitter(280, 480);
+      addLine('> resuming facility access sequence...', 't-dim');
+      await jitter(350, 580);
+      addLine('> UNLOCKING NODE_05...', 't-good');
+      await jitter(700, 1000);
 
-      if (skipTriggered) { revealSite(); return; }
+      if (skipTriggered) return;
 
-      // phase 4 – lore (typing, hold, fade)
-      await loreLine('It was the same attacker that appeared many years ago.');
-      if (skipTriggered) { revealSite(); return; }
-      await loreLine('The signal pattern — identical. Dormant for years, then suddenly active.');
-      if (skipTriggered) { revealSite(); return; }
-      await loreLine('Maybe it noticed a recovering signal from Artical.');
-      if (skipTriggered) { revealSite(); return; }
-      await loreLine('Or maybe Artical was never truly silent.');
-      if (skipTriggered) { revealSite(); return; }
+      // ── TERMINAL → BLACK ────────────────────────────────────────
+      // fade terminal panel out, reveal black, then show lore
+      const termPanel = document.getElementById('terminal-panel');
+      termPanel.style.transition = 'opacity .7s ease';
+      termPanel.style.opacity    = '0';
+      await wait(750);
 
-      await wait(500);
-      revealSite();
+      if (skipTriggered) return;
+
+      // ── LORE SEQUENCE ────────────────────────────────────────────
+      const CHAR_DELAY = 34;
+      const HOLD_MS    = 2200;
+      const FADE_MS    = 800;
+
+      lorePanel.classList.add('visible');
+
+      const loreLines = [
+        'It was the same attacker that appeared many years ago.',
+        'The signal pattern — identical. Dormant for years. Then suddenly active.',
+        'Maybe it noticed a recovering signal from Artical.',
+        'Or maybe Artical was never truly silent.'
+      ];
+
+      for (let i = 0; i < loreLines.length; i++) {
+        if (skipTriggered) break;
+
+        const text = loreLines[i];
+        loreDisp.textContent = '';
+        loreDisp.style.opacity = '1';
+        loreDisp.style.transition = 'none';
+
+        // type in
+        await new Promise(resolve => {
+          let idx = 0;
+          function tick() {
+            if (skipTriggered) { loreDisp.textContent = text; resolve(); return; }
+            loreDisp.textContent = text.slice(0, idx);
+            if (idx <= text.length) { idx++; setTimeout(tick, CHAR_DELAY); }
+            else resolve();
+          }
+          tick();
+        });
+
+        if (skipTriggered) break;
+        await wait(HOLD_MS);
+        if (skipTriggered) break;
+
+        // fade out (skip on last line)
+        if (i < loreLines.length - 1) {
+          loreDisp.style.transition = `opacity ${FADE_MS}ms ease`;
+          loreDisp.style.opacity    = '0';
+          await wait(FADE_MS + 80);
+          loreDisp.style.transition = 'none';
+          loreDisp.textContent = '';
+        }
+      }
+
+      if (!skipTriggered) {
+        await wait(600);
+        revealSite();
+      }
     })();
   </script>
 </body>
